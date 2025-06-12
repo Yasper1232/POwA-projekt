@@ -36,16 +36,26 @@ def get_medicines():
 
     return medicines
 
+import sqlite3
+from models.medicine import Medicine
+
 def update_medicine(medicine: Medicine):
-    conn = sqlite3.connect('pharmacy.db')
-    cursor = conn.cursor()
-    cursor.execute("""
-        UPDATE medicines
-        SET name = ?, description = ?, quantity = ?, price = ?
-        WHERE id = ?
-    """, (medicine.name, medicine.description, medicine.quantity, medicine.price, medicine.id))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect('pharmacy.db')
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE medicines
+            SET name = ?, dosage = ?, quantity = ?, expiry_date = ?
+            WHERE id = ?
+        """, (medicine.name, medicine.dosage, medicine.quantity, medicine.expiry_date.isoformat(), medicine.id))
+
+        conn.commit()
+    except sqlite3.Error as e:
+        print(f"❌ Error while updating medicine: {e}")
+    finally:
+        if conn:
+            conn.close()
 
 def delete_medicine(medicine_id: int) -> bool:
     conn = sqlite3.connect('pharmacy.db')
