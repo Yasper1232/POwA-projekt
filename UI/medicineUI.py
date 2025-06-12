@@ -57,15 +57,15 @@ def edit_medicine():
 
     print("\n--- Edit Medicine ---")
     for m in medicines:
-        print(f"{m.id}. {m.name} | {m.description} | Qty: {m.quantity} | Price: {m.price}")
+        print(f"{m.id}. {m.name} | Dosage: {m.dosage} | Qty: {m.quantity} | Expires: {m.expiry_date}")
 
     try:
-        medicine_id = int(input("Enter the ID of the medicine to edit: "))
+        med_id = int(input("Enter the ID of the medicine you want to edit: "))
     except ValueError:
         print("❌ Invalid input. ID must be a number.")
         return
 
-    medicine_to_edit = next((m for m in medicines if m.id == medicine_id), None)
+    medicine_to_edit = next((m for m in medicines if m.id == med_id), None)
     if not medicine_to_edit:
         print("❌ No medicine found with that ID.")
         return
@@ -73,27 +73,32 @@ def edit_medicine():
     print("Leave a field blank to keep the current value.\n")
 
     name = input(f"Name [{medicine_to_edit.name}]: ") or medicine_to_edit.name
-    desc = input(f"Description [{medicine_to_edit.description}]: ") or medicine_to_edit.description
+    dosage = input(f"Dosage [{medicine_to_edit.dosage}]: ") or medicine_to_edit.dosage
+    quantity_input = input(f"Quantity [{medicine_to_edit.quantity}]: ")
+    expiry_input = input(f"Expiry Date (YYYY-MM-DD) [{medicine_to_edit.expiry_date}]: ")
 
+    # Parsuj dane wejściowe lub zachowaj stare
     try:
-        qty_input = input(f"Quantity [{medicine_to_edit.quantity}]: ")
-        quantity = int(qty_input) if qty_input else medicine_to_edit.quantity
-
-        price_input = input(f"Price [{medicine_to_edit.price}]: ")
-        price = float(price_input) if price_input else medicine_to_edit.price
+        quantity = int(quantity_input) if quantity_input else medicine_to_edit.quantity
     except ValueError:
-        print("❌ Invalid number format.")
+        print("❌ Invalid quantity.")
         return
 
-    updated = Medicine(
+    try:
+        expiry_date = datetime.strptime(expiry_input, "%Y-%m-%d").date() if expiry_input else medicine_to_edit.expiry_date
+    except ValueError:
+        print("❌ Invalid date format.")
+        return
+
+    updated_med = Medicine(
         id=medicine_to_edit.id,
         name=name,
-        description=desc,
+        dosage=dosage,
         quantity=quantity,
-        price=price
+        expiry_date=expiry_date
     )
 
-    update_medicine(updated)
+    update_medicine(updated_med)
     print("✅ Medicine updated successfully.")
 
 
