@@ -1,6 +1,6 @@
 from UI.clientUI import client_menu
 from UI.medicineUI import medicine_menu
-from UI.assignmedicineUI import assign_medicines
+from UI.assignmedicineUI import assign_medicine_to_client
 
 def main_menu():
     while True:
@@ -17,7 +17,8 @@ def main_menu():
         elif choice == '2':
             medicine_menu()
         elif choice == '3':
-            assign_medicines()
+            assign_medicine_to_client()
+
         elif choice == '4':
             print("Goodbye!")
             break

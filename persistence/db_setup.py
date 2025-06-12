@@ -26,5 +26,17 @@ def initialize_database():
         )
     ''')
 
+#tabela wiele do wielu :::
+    cursor.execute('''CREATE TABLE IF NOT EXISTS assigned_medicines (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_id INTEGER NOT NULL,
+    medicine_id INTEGER NOT NULL,
+    assigned_date TEXT NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (medicine_id) REFERENCES medicines(id)
+)''')
+
+
+
     conn.commit()
     conn.close()

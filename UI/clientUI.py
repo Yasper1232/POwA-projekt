@@ -1,3 +1,4 @@
+from UI.assignmedicineUI import view_medicines_for_client
 from models.client import Client
 from persistence.clients import update_client
 from persistence.clients import delete_client as delete_client_db
@@ -10,7 +11,8 @@ def client_menu():
         print("2. Get All Clients")
         print("3. Edit Client")
         print("4. Delete Client")
-        print("5. Back to Main Menu")
+        print("5. View Medicine for Client")
+        print("6. Back to Main Menu")
         choice = input("Choose an option: ")
 
         if choice == '1':
@@ -22,6 +24,8 @@ def client_menu():
         elif choice == '4':
             delete_client()
         elif choice == '5':
+            view_medicines_for_client()
+        elif choice == '6':
             break
         else:
             print("Invalid choice. Try again.")
