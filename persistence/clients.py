@@ -1,25 +1,23 @@
 import sqlite3
 
-def add_client(first_name, last_name, pesel, address):
+from models.client import Client
+
+def add_client(client: Client):
     conn = sqlite3.connect('pharmacy.db')
     cursor = conn.cursor()
-    try:
-        cursor.execute('''
-            INSERT INTO clients (first_name, last_name, pesel, address)
-            VALUES (?, ?, ?, ?)
-        ''', (first_name, last_name, pesel, address))
-        conn.commit()
-        print("✅ Klient dodany pomyślnie.")
-    except sqlite3.IntegrityError:
-        print("❌ Klient z takim PESEL-em już istnieje.")
-    finally:
-        conn.close()
+    cursor.execute(
+        "INSERT INTO clients (first_name, last_name, pesel, address) VALUES (?, ?, ?, ?)",
+        (client.first_name, client.last_name, client.pesel, client.address)
+    )
+    conn.commit()
+    conn.close()
 
-# Możemy dodać też np. funkcję pobierającą klientów
 def get_clients():
     conn = sqlite3.connect('pharmacy.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM clients')
+    cursor.execute("SELECT id, first_name, last_name, pesel, address FROM clients")
     rows = cursor.fetchall()
     conn.close()
-    return rows
+
+    clients = [Client(id=row[0], first_name=row[1], last_name=row[2], pesel=row[3], address=row[4]) for row in rows]
+    return clients

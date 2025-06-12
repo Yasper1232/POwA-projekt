@@ -1,12 +1,8 @@
-from persistence.db_setup import initialize_database
-from persistence.clients import add_client, get_clients
-from persistence.medicines import add_medicine, get_medicines
-
-
-#Przeniosłem logikę ui do osobnego pliku,
-#co jest zgodne z zasada Separation of Concerns
-#jak i rowniez S z solid, ktora mowi ze klasa,moduł powinien miec jedna odpowiedzialnosc,
-# wiec UI tylko w pliku ui.py!!!
+from models.client import Client
+from models.medicine import Medicine
+from persistence.clients import add_client as add_client_db, get_clients as get_clients_db
+from persistence.medicines import add_medicine as add_medicine_db, get_medicines as get_medicines_db
+from datetime import datetime
 
 def main_menu():
     while True:
@@ -19,9 +15,9 @@ def main_menu():
         choice = input("Choose an option: ")
 
         if choice == '1':
-            manage_clients()
+            client_menu()
         elif choice == '2':
-            manage_medicines()
+            medicine_menu()
         elif choice == '3':
             assign_medicines()
         elif choice == '4':
@@ -30,21 +26,97 @@ def main_menu():
         else:
             print("Invalid choice. Please try again.")
 
-def manage_clients():
-    print("\n--- Manage Clients ---")
+# ------- CLIENTS ---------
+
+def client_menu():
+    while True:
+        print("\n--- Client Management ---")
+        print("1. Add Client")
+        print("2. Get All Clients")
+        print("3. Back to Main Menu")
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            add_client()
+        elif choice == '2':
+            get_clients()
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+def add_client():
     first = input("First name: ")
     last = input("Last name: ")
     pesel = input("PESEL: ")
     addr = input("Address: ")
-    add_client(first, last, pesel, addr)
+    client = Client(id=0, first_name=first, last_name=last, pesel=pesel, address=addr)
+    add_client_db(client)  # zmień import z persistance na add_client_db, żeby uniknąć kolizji nazw
 
-def manage_medicines():
-    print("\n--- Manage Medicines ---")
+def get_clients():
+    clients = get_clients_db()
+    print("\n--- Clients List ---")
+    for c in clients:
+        print(f"{c.id}. {c.first_name} {c.last_name} | PESEL: {c.pesel} | Address: {c.address}")
+
+# ------- MEDICINES ---------
+
+def medicine_menu():
+    while True:
+        print("\n--- Medicine Management ---")
+        print("1. Add Medicine")
+        print("2. View All Medicines")
+        print("3. Back to Main Menu")
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            add_medicine()
+        elif choice == '2':
+            get_medicines()
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+def medicine_menu():
+    while True:
+        print("\n--- Medicine Management ---")
+        print("1. Add Medicine")
+        print("2. Get All Medicines")
+        print("3. Back to Main Menu")
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            add_medicine()
+        elif choice == '2':
+            get_medicines()
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+def add_medicine():
     name = input("Medicine name: ")
     dosage = input("Dosage (e.g. 500mg): ")
     quantity = int(input("Quantity: "))
-    expiry = input("Expiry date (YYYY-MM-DD): ")
-    add_medicine(name, dosage, quantity, expiry)
+    expiry_str = input("Expiry date (YYYY-MM-DD): ")
+
+    try:
+        expiry_date = datetime.strptime(expiry_str, "%Y-%m-%d").date()
+    except ValueError:
+        print("❌ Invalid date format. Please use YYYY-MM-DD.")
+        return
+
+    medicine = Medicine(id=0, name=name, dosage=dosage, quantity=quantity, expiry_date=expiry_date)
+    add_medicine_db(medicine)
+
+def get_medicines():
+    medicines = get_medicines_db()
+    print("\n--- Medicines List ---")
+    for m in medicines:
+        print(f"{m.id}. {m.name} | {m.dosage} | Qty: {m.quantity} | Exp: {m.expiry_date}")
+
+# ------- FUTURE FEATURE ---------
 
 def assign_medicines():
     print("Feature coming soon...")
