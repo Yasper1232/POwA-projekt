@@ -26,22 +26,7 @@ def medicine_menu():
         else:
             print("Invalid choice. Try again.")
 
-def medicine_menu():
-    while True:
-        print("\n--- Medicine Management ---")
-        print("1. Add Medicine")
-        print("2. Get All Medicines")
-        print("3. Back to Main Menu")
-        choice = input("Choose an option: ")
 
-        if choice == '1':
-            add_medicine()
-        elif choice == '2':
-            get_medicines()
-        elif choice == '3':
-            break
-        else:
-            print("Invalid choice. Try again.")
 
 def add_medicine():
     name = input("Medicine name: ")
