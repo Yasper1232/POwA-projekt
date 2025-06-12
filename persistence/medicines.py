@@ -35,3 +35,23 @@ def get_medicines():
         medicines.append(Medicine(id=id_, name=name, dosage=dosage, quantity=quantity, expiry_date=expiry_date))
 
     return medicines
+
+def update_medicine(medicine: Medicine):
+    conn = sqlite3.connect('pharmacy.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE medicines
+        SET name = ?, description = ?, quantity = ?, price = ?
+        WHERE id = ?
+    """, (medicine.name, medicine.description, medicine.quantity, medicine.price, medicine.id))
+    conn.commit()
+    conn.close()
+
+def delete_medicine(medicine_id: int) -> bool:
+    conn = sqlite3.connect('pharmacy.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM medicines WHERE id = ?", (medicine_id,))
+    affected_rows = cursor.rowcount
+    conn.commit()
+    conn.close()
+    return affected_rows > 0
