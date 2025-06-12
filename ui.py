@@ -1,3 +1,13 @@
+from persistence.db_setup import initialize_database
+from persistence.clients import add_client, get_clients
+from persistence.medicines import add_medicine, get_medicines
+
+
+#Przeniosłem logikę ui do osobnego pliku,
+#co jest zgodne z zasada Separation of Concerns
+#jak i rowniez S z solid, ktora mowi ze klasa,moduł powinien miec jedna odpowiedzialnosc,
+# wiec UI tylko w pliku ui.py!!!
+
 def main_menu():
     while True:
         print("\n=== PharmaManager ===")
@@ -21,13 +31,20 @@ def main_menu():
             print("Invalid choice. Please try again.")
 
 def manage_clients():
-    print("Manage Clients - feature coming soon...")
+    print("\n--- Manage Clients ---")
+    first = input("First name: ")
+    last = input("Last name: ")
+    pesel = input("PESEL: ")
+    addr = input("Address: ")
+    add_client(first, last, pesel, addr)
 
 def manage_medicines():
-    print("Manage Medicines - feature coming soon...")
+    print("\n--- Manage Medicines ---")
+    name = input("Medicine name: ")
+    dosage = input("Dosage (e.g. 500mg): ")
+    quantity = int(input("Quantity: "))
+    expiry = input("Expiry date (YYYY-MM-DD): ")
+    add_medicine(name, dosage, quantity, expiry)
 
 def assign_medicines():
-    print("Assign Medicines - feature coming soon...")
-
-if __name__ == "__main__":
-    main_menu()
+    print("Feature coming soon...")
