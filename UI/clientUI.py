@@ -1,6 +1,6 @@
 from UI.assignmedicineUI import view_medicines_for_client
 from models.client import Client
-from persistence.clients import update_client
+from persistence.clients import update_client, client_exists
 from persistence.clients import delete_client as delete_client_db
 
 from persistence.clients import add_client as add_client_db, get_clients as get_clients_db
@@ -35,6 +35,11 @@ def add_client():
     last = input("Last name: ")
     pesel = input("PESEL: ")
     addr = input("Address: ")
+
+    if client_exists(pesel):
+        print("Client with this pesel already exists.")
+        return
+
     client = Client(id=0, first_name=first, last_name=last, pesel=pesel, address=addr)
     add_client_db(client)  # zmień import z persistance na add_client_db, żeby uniknąć kolizji nazw
 

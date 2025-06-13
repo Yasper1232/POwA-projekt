@@ -42,3 +42,11 @@ def delete_client(client_id: int) -> bool:
     conn.close()
 
     return affected_rows > 0  # Zwraca True jeśli ktoś został usunięty, False jeśli nie
+
+def client_exists(pesel):
+    conn = sqlite3.connect('pharmacy.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM clients WHERE pesel = ?", (pesel,))
+    result = cursor.fetchone()
+    conn.close()
+    return result is not None
