@@ -30,6 +30,9 @@ def client_menu():
         else:
             print("Invalid choice. Try again.")
 
+from models.client import Client
+from persistence.clients import add_client as add_client_db, client_exists
+
 def add_client():
     first = input("First name: ")
     last = input("Last name: ")
@@ -37,11 +40,13 @@ def add_client():
     addr = input("Address: ")
 
     if client_exists(pesel):
-        print("Client with this pesel already exists.")
+        print("Client with this PESEL already exists.")
         return
 
     client = Client(id=0, first_name=first, last_name=last, pesel=pesel, address=addr)
-    add_client_db(client)  # zmień import z persistance na add_client_db, żeby uniknąć kolizji nazw
+    add_client_db(client)
+    print("✅ Client added successfully.")
+
 
 def get_clients():
     clients = get_clients_db()
